@@ -4,15 +4,18 @@ import CustomInput from "./CustomInput";
 import excelDownload from "./Funciones/ExportarExcel";
 import * as ApiAriel from "./Funciones/ComsumoApi";
 
-const EstadoComponente = () => {
-  const url = "http://localhost:8080";
+const PrestamoComponente = () => {
+  const bUrl = "http://localhost:8080/";
+  const apiUsada = "Prestamo";
+  const url = bUrl + apiUsada;
 
-  const [Estados, setEstados] = useState([]);
+  const [Prestamos, setPrestamos] = useState([]);
   const [id, setId] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [activo, setActivo] = useState("");
-  const [operacion, setOperacion] = useState(1);
+  const [estado, setEstado] = useState("");
+  const [cliente, setCliente] = useState("");
+  const [producto, setProducto] = useState("");
+  const [fechaCreacion, setFechaCreacion] = useState("");
+  const [fechaDevolucion, setFechaDevolucion] = useState("");
   const [titulo, setTitulo] = useState("");
 
   {
@@ -22,35 +25,34 @@ const EstadoComponente = () => {
     const fetchData = async () => {
       try {
         const data = await ApiAriel.Listar(url);
-        setEstados(data);
+        setprestamos(data);
       } catch (error) {
-        console.error("Error al listar los estados:", error);
+        console.error("Error al listar los prestamos:", error);
       }
     };
 
     fetchData();
   }, []);
 
-  const aperturaModal = (pOperacion, pId, pNombre, pDescripcion, pActivo) => {
-    console.log("apertura correcta haciendo" + pOperacion);
-    setId("");
-    setNombre("");
-    setDescripcion("");
-    setActivo("");
-    setOperacion(pOperacion);
-    if (pOperacion === 1) {
-      setTitulo("Registrar nuevo estado");
-    } else if (pOperacion === 2) {
-      setTitulo("Editar estado");
-      setId(pId);
-      setNombre(pNombre);
-      setDescripcion(pDescripcion);
-      setActivo(pActivo);
-    }
-    window.setTimeout(() => {
-      document.getElementById("nombre").focus();
-    }, 500);
-  };
+  //   const aperturaModal = (pOperacion, pId, pNombre, pDescripcion, pActivo) => {
+  //     setId("");
+  //     setNombre("");
+  //     setDescripcion("");
+  //     setActivo("");
+  //     setOperacion(pOperacion);
+  //     if (pOperacion === 1) {
+  //       setTitulo("Registrar nuevo prestamo");
+  //     } else if (pOperacion === 2) {
+  //       setTitulo("Editar prestamo");
+  //       setId(pId);
+  //       setNombre(pNombre);
+  //       setDescripcion(pDescripcion);
+  //       setActivo(pActivo);
+  //     }
+  //     window.setTimeout(() => {
+  //       document.getElementById("nombre").focus();
+  //     }, 500);
+  //   };
 
   const validarCampos = () => {
     var vParametros;
@@ -59,11 +61,11 @@ const EstadoComponente = () => {
 
     console.log(activo);
     if (nombre.trim() === "") {
-      alerta("No se ha ingresado un nombre para el estado", "warning");
+      alerta("No se ha ingresado un nombre para el prestamo", "warning");
     } else if (descripcion.trim() === "") {
-      alerta("No se ha ingresado una descripcion para el estado", "warning");
+      alerta("No se ha ingresado una descripcion para el prestamo", "warning");
     } else if (String(activo).trim() === "") {
-      alerta("No se indicado si ese estado se encuentra activo", "warning");
+      alerta("No se indicado si ese prestamo se encuentra activo", "warning");
     } else {
       if (operacion === 1) {
         vParametros = {
@@ -97,13 +99,13 @@ const EstadoComponente = () => {
               <button
                 className="btn btn-dark"
                 data-bs-toggle="modal"
-                data-bs-target="#modalEstado"
+                data-bs-target="#modalprestamo"
                 onClick={() => aperturaModal(1)}
               >
                 <i className="fa-solid facircle-plus">Agregar</i>
               </button>
               <button
-                onClick={() => excelDownload(Estados)}
+                onClick={() => excelDownload(prestamos)}
                 className="btn btn-success"
               >
                 Descargar Excel
@@ -118,30 +120,32 @@ const EstadoComponente = () => {
                 <thead>
                   <tr>
                     <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Activo</th>
+                    <th>Id Estado</th>
+                    <th>Id Producto</th>
+                    <th>Fecha de Creacion</th>
+                    <th>Fecha de Devolucion</th>
+                    <th>Cantidad</th>
                   </tr>
                 </thead>
                 <tbody className="table-group-divider">
-                  {Estados.map((estado, id) => (
-                    <tr key={estado.id}>
-                      <td>{estado.id}</td>
-                      <td>{estado.nombre}</td>
-                      <td>{estado.descripcion}</td>
-                      <td>{estado.activo}</td>
+                  {prestamos.map((prestamo, id) => (
+                    <tr key={prestamo.id}>
+                      <td>{prestamo.id}</td>
+                      <td>{prestamo.nombre}</td>
+                      <td>{prestamo.descripcion}</td>
+                      <td>{prestamo.activo}</td>
                       <td>
                         <button
                           className="btn btn-warning"
                           data-bs-toggle="modal"
-                          data-bs-target="#modalEstado"
+                          data-bs-target="#modalprestamo"
                           onClick={() =>
                             aperturaModal(
                               2,
-                              estado.id,
-                              estado.nombre,
-                              estado.descripcion,
-                              estado.activo
+                              prestamo.id,
+                              prestamo.nombre,
+                              prestamo.descripcion,
+                              prestamo.activo
                             )
                           }
                         >
@@ -152,9 +156,9 @@ const EstadoComponente = () => {
                         <button
                           onClick={() =>
                             ApiAriel.Eliminar(
-                              estado.id,
-                              estado.nombre,
-                              "estado"
+                              prestamo.id,
+                              prestamo.nombre,
+                              "prestamo"
                             )
                           }
                           className="btn btn-danger"
@@ -172,7 +176,7 @@ const EstadoComponente = () => {
       </div>
 
       {/**Modal */}
-      <div id="modalEstado" className="modal fade" aria-hidden="true">
+      <div id="modalprestamo" className="modal fade" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -240,4 +244,4 @@ const EstadoComponente = () => {
   );
 };
 
-export default EstadoComponente;
+export default PrestamoComponente;
