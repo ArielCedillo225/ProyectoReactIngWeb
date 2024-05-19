@@ -20,9 +20,6 @@ export const Consumir = async (pMetodo, pParametros, pUrl) => {
         document.getElementById("btncerrar").click();
       }
     })
-    // .then(() => {
-    //   Listar(baseUrl);
-    // })
     .catch((error) => {
       alerta("Error al realizar la operación. " + error, "error");
     });

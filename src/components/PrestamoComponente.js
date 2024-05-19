@@ -4,6 +4,8 @@ import CustomInput from "./CustomInput";
 import excelDownload from "./Funciones/ExportarExcel";
 import * as ApiAriel from "./Funciones/ComsumoApi";
 
+import fechaActual from "./Funciones/FechaActual";
+
 const PrestamoComponente = () => {
   const bUrl = "http://localhost:8080/";
   const apiUsada = "Prestamo";
@@ -14,9 +16,11 @@ const PrestamoComponente = () => {
   const [estado, setEstado] = useState("");
   const [cliente, setCliente] = useState("");
   const [producto, setProducto] = useState("");
-  const [fechaCreacion, setFechaCreacion] = useState("");
+  const [fechaCreacion, setFechaCreacion] = useState(fechaActual);
   const [fechaDevolucion, setFechaDevolucion] = useState("");
+  const [cantidad, setCantidad] = useState(0);
   const [titulo, setTitulo] = useState("");
+  const [operacion, setOperacion] = useState("");
 
   {
     /*Aqui se usa fetchData solo para cargar la primera vez porque el useEffect no puede ser async */
@@ -25,7 +29,8 @@ const PrestamoComponente = () => {
     const fetchData = async () => {
       try {
         const data = await ApiAriel.Listar(url);
-        setprestamos(data);
+        setPrestamos(data);
+        console.log(data);
       } catch (error) {
         console.error("Error al listar los prestamos:", error);
       }
@@ -34,53 +39,80 @@ const PrestamoComponente = () => {
     fetchData();
   }, []);
 
-  //   const aperturaModal = (pOperacion, pId, pNombre, pDescripcion, pActivo) => {
-  //     setId("");
-  //     setNombre("");
-  //     setDescripcion("");
-  //     setActivo("");
-  //     setOperacion(pOperacion);
-  //     if (pOperacion === 1) {
-  //       setTitulo("Registrar nuevo prestamo");
-  //     } else if (pOperacion === 2) {
-  //       setTitulo("Editar prestamo");
-  //       setId(pId);
-  //       setNombre(pNombre);
-  //       setDescripcion(pDescripcion);
-  //       setActivo(pActivo);
-  //     }
-  //     window.setTimeout(() => {
-  //       document.getElementById("nombre").focus();
-  //     }, 500);
-  //   };
+  const aperturaModal = (
+    pOperacion,
+    pId,
+    pEstado,
+    pCliente,
+    pProducto,
+    pFechaCreacion,
+    pFechaDevolucion,
+    pCantidad
+  ) => {
+    setId("");
+    setEstado("");
+    setCliente("");
+    setProducto("");
+    setFechaCreacion(fechaActual);
+    setFechaDevolucion("");
+    setCantidad(0);
+    setOperacion(pOperacion);
+    if (pOperacion === 1) {
+      setTitulo("Registrar nuevo prestamo");
+    } else if (pOperacion === 2) {
+      setTitulo("Editar prestamo");
+      setId(pId);
+      setEstado(pEstado);
+      setCliente(pCliente);
+      setProducto(pProducto);
+      setFechaCreacion(pFechaCreacion);
+      setFechaDevolucion(pFechaDevolucion);
+      setCantidad(pCantidad);
+    }
+    window.setTimeout(() => {
+      document.getElementById("estado").focus();
+    }, 500);
+  };
 
   const validarCampos = () => {
     var vParametros;
     var vMetodo;
     var vURL;
+    var fechaMaxima = new Date("2025,1,1");
+    var fDevolucion = new Date(fechaDevolucion);
 
-    console.log(activo);
-    if (nombre.trim() === "") {
-      alerta("No se ha ingresado un nombre para el prestamo", "warning");
-    } else if (descripcion.trim() === "") {
-      alerta("No se ha ingresado una descripcion para el prestamo", "warning");
-    } else if (String(activo).trim() === "") {
-      alerta("No se indicado si ese prestamo se encuentra activo", "warning");
+    var regex = /^[0-9]+$/;
+    const datePattern = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+
+    if (!regex.test(estado)) {
+      alerta("Ingrese solo números en este campo", "warning");
+    } else if (!regex.test(cliente)) {
+      alerta("Ingrese solo números en este campo", "warning");
+    } else if (!regex.test(producto)) {
+      alerta("Ingrese solo números en este campo", "warning");
+    } else if (!datePattern.test(fechaDevolucion)) {
+      alerta("El formato del campo debe ser AAAA-MM-DD", "warning");
+    } else if (fDevolucion > fechaMaxima) {
+      alerta("La fecha de devolución debe ser antes del 2025-01-01", "warning");
     } else {
       if (operacion === 1) {
         vParametros = {
-          nombre: nombre.trim(),
-          descripcion: descripcion.trim(),
-          activo: activo.trim(),
+          estado: estado,
+          cliente: cliente,
+          producto: producto,
+          fechaDevolucion: fechaDevolucion,
+          cantidad: cantidad,
         };
         vMetodo = "POST";
-        vURL = url + "/Registrar";
+        vURL = url + "/Insertar";
       } else {
         vParametros = {
           id: id,
-          nombre: nombre.trim(),
-          descripcion: descripcion.trim(),
-          activo: activo.trim(),
+          estado: estado,
+          cliente: cliente,
+          producto: producto,
+          fechaDevolucion: fechaDevolucion,
+          cantidad: cantidad,
         };
         vMetodo = "PUT";
         vURL = url + "/Actualizar";
@@ -105,7 +137,7 @@ const PrestamoComponente = () => {
                 <i className="fa-solid facircle-plus">Agregar</i>
               </button>
               <button
-                onClick={() => excelDownload(prestamos)}
+                onClick={() => excelDownload(Prestamos)}
                 className="btn btn-success"
               >
                 Descargar Excel
@@ -121,19 +153,24 @@ const PrestamoComponente = () => {
                   <tr>
                     <th>Id</th>
                     <th>Id Estado</th>
+                    <th>Id Cliente</th>
                     <th>Id Producto</th>
                     <th>Fecha de Creacion</th>
                     <th>Fecha de Devolucion</th>
                     <th>Cantidad</th>
                   </tr>
                 </thead>
+
                 <tbody className="table-group-divider">
-                  {prestamos.map((prestamo, id) => (
+                  {Prestamos.map((prestamo, id) => (
                     <tr key={prestamo.id}>
                       <td>{prestamo.id}</td>
-                      <td>{prestamo.nombre}</td>
-                      <td>{prestamo.descripcion}</td>
-                      <td>{prestamo.activo}</td>
+                      <td>{prestamo.estado}</td>
+                      <td>{prestamo.cliente}</td>
+                      <td>{prestamo.producto}</td>
+                      <td>{prestamo.fechaCreacion}</td>
+                      <td>{prestamo.fechaDevolucion}</td>
+                      <td>{prestamo.cantidad}</td>
                       <td>
                         <button
                           className="btn btn-warning"
@@ -143,9 +180,12 @@ const PrestamoComponente = () => {
                             aperturaModal(
                               2,
                               prestamo.id,
-                              prestamo.nombre,
-                              prestamo.descripcion,
-                              prestamo.activo
+                              prestamo.estado,
+                              prestamo.cliente,
+                              prestamo.producto,
+                              prestamo.fechaCreacion,
+                              prestamo.fechaDevolucion,
+                              prestamo.cantidad
                             )
                           }
                         >
@@ -157,7 +197,7 @@ const PrestamoComponente = () => {
                           onClick={() =>
                             ApiAriel.Eliminar(
                               prestamo.id,
-                              prestamo.nombre,
+                              prestamo.estado,
                               "prestamo"
                             )
                           }
@@ -191,31 +231,49 @@ const PrestamoComponente = () => {
 
             <div className="modal-body">
               <input type="hidden" id="id"></input>
-
-              {/*Input para ingreso de nombre*/}
-
               <CustomInput
-                id="nombre"
-                placeholder="Nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                id="estado"
+                placeholder="Estado"
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                texto="Estado"
               />
-
-              {/*Input para ingreso de descripcion*/}
               <CustomInput
-                id="descripcion"
-                placeholder="Descripcion"
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
+                id="cliente"
+                placeholder="Cliente"
+                value={cliente}
+                onChange={(e) => setCliente(e.target.value)}
+                texto="Cliente"
               />
-              {/*Input para ingreso de activo*/}
               <CustomInput
-                id="activo"
-                placeholder="Activo"
-                value={activo}
-                onChange={(e) => setActivo(e.target.value)}
+                id="producto"
+                placeholder="Producto"
+                value={producto}
+                onChange={(e) => setProducto(e.target.value)}
+                texto="Producto"
               />
-
+              <CustomInput
+                id="fechaCreacion"
+                placeholder="Fecha Creacion"
+                value={fechaCreacion}
+                onChange={(e) => setFechaCreacion(e.target.value)}
+                texto="Fecha Creacion"
+                readOnly={true}
+              />
+              <CustomInput
+                id="fechaDevolucion"
+                placeholder="Fecha Devolucion"
+                value={fechaDevolucion}
+                onChange={(e) => setFechaDevolucion(e.target.value)}
+                texto="Fecha Devolucion"
+              />
+              <CustomInput
+                id="cantidad"
+                placeholder="Cantidad"
+                value={cantidad}
+                onChange={(e) => setCantidad(e.target.value)}
+                texto="Cantidad"
+              />
               <div className="d-grid col-6 mx-auto">
                 <button
                   className="btn btn-success"

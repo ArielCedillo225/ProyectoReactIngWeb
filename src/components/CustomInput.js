@@ -4,7 +4,7 @@ function CustomInput(props) {
   return (
     <div className="input-group mb-3">
       <span className="inputgroup-text">
-        <i className="fa-solid fa-gift"></i>
+        <label>{props.texto}</label>
       </span>
       <input
         type="text"
@@ -13,6 +13,8 @@ function CustomInput(props) {
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.onChange}
+        readOnly={props.readOnly ? true : false}
+        display={props.readOnly ? "block" : "none"}
       ></input>
     </div>
   );
