@@ -16,7 +16,7 @@ export const Consumir = async (pMetodo, pParametros, pUrl) => {
     .then((vRespuesta) => {
       var vStatus = vRespuesta.status;
       if (vStatus === 200) {
-        alerta("Operación realizada correctamente", "success");
+        alerta(vRespuesta.data, "info");
         document.getElementById("btncerrar").click();
       }
     })
@@ -28,7 +28,7 @@ export const Consumir = async (pMetodo, pParametros, pUrl) => {
 export const Eliminar = (pId, pExtra, tipo) => {
   const MySwal = withReactContent(Swal);
   MySwal.fire({
-    title: "Seguro que desea eliminar el" + tipo + " " + pExtra + "?",
+    title: "Seguro que desea eliminar el " + tipo + " " + pExtra + "?",
     icon: "question",
     text: "No se podra dar marcha atras",
     showCancelButton: true,

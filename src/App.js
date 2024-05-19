@@ -7,6 +7,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<PrestamoComponente />}></Route>
+        <Route path="/estados" element={<EstadoComponente />}></Route>
       </Routes>
     </BrowserRouter>
   );
