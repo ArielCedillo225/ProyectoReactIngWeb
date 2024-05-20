@@ -1,6 +1,6 @@
 import React, { PureComponent, act, useEffect, useState } from "react";
 import { alerta } from "../utils";
-import CustomInput from "./CustomInput";
+import CustomInput from "./ComponentesMenores/CustomInput";
 import excelDownload from "./Funciones/ExportarExcel";
 import * as ApiAriel from "./Funciones/ComsumoApi";
 
@@ -57,7 +57,6 @@ const EstadoComponente = () => {
     var vMetodo;
     var vURL;
 
-    console.log(activo);
     if (nombre.trim() === "") {
       alerta("No se ha ingresado un nombre para el estado", "warning");
     } else if (descripcion.trim() === "") {

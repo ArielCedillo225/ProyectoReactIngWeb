@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { alerta } from "../utils";
-import CustomInput from "./CustomInput";
+
+import CustomInput from "./ComponentesMenores/CustomInput";
 import excelDownload from "./Funciones/ExportarExcel";
 import * as ApiAriel from "./Funciones/ComsumoApi";
-import checkArroba from "./Funciones/CheckCorreo";
 
-import fechaActual from "./Funciones/FechaActual";
+import BotonHipervinculo from "./ComponentesMenores/BotonHipervinculo";
+import ValidarCliente from "./Funciones/ValidarCliente";
 
 const ClienteComponente = () => {
   const bUrl = "http://localhost:8080/";
@@ -13,14 +13,12 @@ const ClienteComponente = () => {
   const url = bUrl + apiUsada;
 
   const [Clientes, setClientes] = useState([]);
-  const [id, setId] = useState("");
   const [nombres, setNombres] = useState("");
   const [identificacion, setIdentificacion] = useState("");
   const [direccion, setDireccion] = useState("");
   const [telefono, setTelefono] = useState("");
   const [correo, setCorreo] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
-  const [estado, setEstado] = useState("");
   {
     /*Aqui se usa fetchData solo para cargar la primera vez porque el useEffect no puede ser async */
   }
@@ -54,44 +52,20 @@ const ClienteComponente = () => {
   };
 
   const validarCampos = () => {
-    var vParametros;
     var vMetodo;
     var vURL;
-    var fNacimiento = new Date(fechaNacimiento);
-    var fActual = new Date(fechaActual);
+    var vParametros;
 
-    var regex = /^[0-9]+$/;
-    const datePattern = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+    vParametros = ValidarCliente(
+      nombres,
+      identificacion,
+      direccion,
+      telefono,
+      correo,
+      fechaNacimiento
+    );
 
-    if (!regex.test(identificacion)) {
-      alerta("Ingrese solo números en el campo identificacion", "warning");
-    } else if (nombres.trim() === "") {
-      alerta("Ingrese valores en el nombre", "warning");
-    } else if (direccion.trim() === "") {
-      alerta("Ingrese valores en la direccion", "warning");
-    } else if (!regex.test(telefono)) {
-      alerta("Ingrese solo números en el campo telefono", "warning");
-    } else if (!datePattern.test(fechaNacimiento)) {
-      alerta("El formato del campo debe ser AAAA-MM-DD", "warning");
-    } else if (!checkArroba(correo)) {
-      alerta(
-        "El correo debe contener una arroba que se encuentre entre el texto",
-        "warning"
-      );
-    } else if (fNacimiento >= fActual) {
-      alerta(
-        "La fecha de nacimiento debe ser menor a la fecha actual",
-        "warning"
-      );
-    } else {
-      vParametros = {
-        nombres: nombres,
-        identificacion: identificacion,
-        direccion: direccion,
-        telefono: telefono,
-        correo: correo,
-        fechaNacimiento: fechaNacimiento,
-      };
+    if (vParametros) {
       vMetodo = "POST";
       vURL = url + "/Registrar";
 
@@ -131,7 +105,7 @@ const ClienteComponente = () => {
           </div>
         </div>
         <div className="row mt-3">
-          <div className="col-12 col-lg-8 offset-0">
+          <div className="col-12 col-lg-8 offset-1">
             <div className="table responsive">
               <table className="table table-bordered">
                 <thead>
@@ -274,11 +248,7 @@ const ClienteComponente = () => {
           </div>
         </div>
       </div>
-      <a href="/">
-        <button className="btn btn-dark offset-8">
-          <i className="fa-solid facircle-plus">Ir a Prestamos</i>
-        </button>
-      </a>
+      <BotonHipervinculo link="/" mensaje="Ir a Prestamos" />
     </div>
   );
 };
