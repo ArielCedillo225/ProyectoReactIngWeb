@@ -6,6 +6,9 @@ import * as ApiAriel from "./Funciones/ComsumoApi";
 
 import BotonHipervinculo from "./ComponentesMenores/BotonHipervinculo";
 import ValidarCliente from "./Funciones/ValidarCliente";
+import CamposCliente from "./Campos/CamposCliente";
+import HeaderTabla from "./ComponentesMenores/HeaderTabla";
+import Modal from "./ComponentesMenores/Modal";
 
 const ClienteComponente = () => {
   const bUrl = "http://localhost:8080/";
@@ -104,28 +107,12 @@ const ClienteComponente = () => {
             </div>
           </div>
         </div>
+
         <div className="row mt-3">
           <div className="col-12 col-lg-8 offset-1">
             <div className="table responsive">
               <table className="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Identificación</th>
-                    <th>Tipo Identificación</th>
-                    <th>Nombre Principal</th>
-                    <th>Nombre Secundario</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Correo</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Fecha Creación</th>
-                    <th>Estado</th>
-                    <th>Activar</th>
-                  </tr>
-                </thead>
+                <HeaderTabla data={CamposCliente} />
 
                 <tbody className="table-group-divider">
                   {Clientes.map((cliente) => (
@@ -169,85 +156,51 @@ const ClienteComponente = () => {
       </div>
 
       {/**Modal */}
-      <div id="modal-cliente" className="modal fade" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <label className="h5">Agregar Cliente</label>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
+      <Modal id="modal-cliente" title="Agregar Cliente">
+        <CustomInput
+          id="identificacion"
+          placeholder="Identificación"
+          value={identificacion}
+          onChange={(e) => setIdentificacion(e.target.value)}
+        />
+        <CustomInput
+          id="nombres"
+          placeholder="Nombres"
+          value={nombres}
+          onChange={(e) => setNombres(e.target.value)}
+        />
+        <CustomInput
+          id="direccion"
+          placeholder="Dirección"
+          value={direccion}
+          onChange={(e) => setDireccion(e.target.value)}
+        />
+        <CustomInput
+          id="telefono"
+          placeholder="Teléfono"
+          value={telefono}
+          onChange={(e) => setTelefono(e.target.value)}
+        />
+        <CustomInput
+          id="correo"
+          placeholder="Correo"
+          value={correo}
+          onChange={(e) => setCorreo(e.target.value)}
+        />
+        <CustomInput
+          id="fechaNacimiento"
+          placeholder="Fecha de Nacimiento"
+          value={fechaNacimiento}
+          onChange={(e) => setFechaNacimiento(e.target.value)}
+        />
 
-            <div className="modal-body">
-              <input type="hidden" id="id"></input>
-
-              {/*Input para ingreso de nombre*/}
-
-              <CustomInput
-                id="identificacion"
-                placeholder="Identificación"
-                value={identificacion}
-                onChange={(e) => setIdentificacion(e.target.value)}
-              />
-              <CustomInput
-                id="nombres"
-                placeholder="Nombres"
-                value={nombres}
-                onChange={(e) => setNombres(e.target.value)}
-              />
-              <CustomInput
-                id="direccion"
-                placeholder="Dirección"
-                value={direccion}
-                onChange={(e) => setDireccion(e.target.value)}
-              />
-              <CustomInput
-                id="telefono"
-                placeholder="Teléfono"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-              />
-              <CustomInput
-                id="correo"
-                placeholder="Correo"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-              />
-              <CustomInput
-                id="fechaNacimiento"
-                placeholder="Fecha de Nacimiento"
-                value={fechaNacimiento}
-                onChange={(e) => setFechaNacimiento(e.target.value)}
-              />
-
-              <div className="d-grid col-6 mx-auto">
-                <button
-                  className="btn btn-success"
-                  onClick={() => validarCampos()}
-                >
-                  <i className="fa-solid fa-floppy-disck"></i>
-                  Guardar
-                </button>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button
-                type="button"
-                id="btncerrar"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
+        <div className="d-grid col-6 mx-auto">
+          <button className="btn btn-success" onClick={() => validarCampos()}>
+            <i className="fa-solid fa-floppy-disck"></i>
+            Guardar
+          </button>
         </div>
-      </div>
+      </Modal>
       <BotonHipervinculo link="/" mensaje="Ir a Prestamos" />
     </div>
   );

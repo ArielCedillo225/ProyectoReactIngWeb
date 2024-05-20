@@ -20,9 +20,9 @@ const PrestamoComponente = () => {
   const [cantidad, setCantidad] = useState(0);
   const [parcial, setParcial] = useState(0);
   const [titulo, setTitulo] = useState("");
-  {
-    /*Aqui se usa fetchData solo para cargar la primera vez porque el useEffect no puede ser async */
-  }
+
+  /*Aqui se usa fetchData solo para cargar la primera vez porque el useEffect no puede ser async */
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +34,7 @@ const PrestamoComponente = () => {
     };
 
     fetchData();
-  }, []);
+  }, [url]);
 
   const aperturaModal = () => {
     setCliente("");
@@ -73,7 +73,7 @@ const PrestamoComponente = () => {
       alerta("Ingrese solo números en el campo producto", "warning");
     } else if (!regex.test(cantidad)) {
       alerta("Ingrese solo números en el campo cantidad", "warning");
-    } else if (cantidad == 0) {
+    } else if (cantidad === 0) {
       alerta("La cantidad debe ser mayor a cero", "warning");
     } else if (!datePattern.test(fechaDevolucion)) {
       alerta("El formato del campo debe ser AAAA-MM-DD", "warning");
