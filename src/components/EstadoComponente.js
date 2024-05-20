@@ -103,7 +103,7 @@ const EstadoComponente = () => {
                 <i className="fa-solid facircle-plus">Agregar</i>
               </button>
               <button
-                onClick={() => excelDownload(Estados)}
+                onClick={() => excelDownload(Estados, "Estados")}
                 className="btn btn-success"
               >
                 Descargar Excel

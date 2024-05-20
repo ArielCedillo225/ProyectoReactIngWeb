@@ -1,4 +1,4 @@
-import React, { PureComponent, act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { alerta } from "../utils";
 import CustomInput from "./CustomInput";
 import excelDownload from "./Funciones/ExportarExcel";
@@ -132,7 +132,7 @@ const PrestamoComponente = () => {
                 <i className="fa-solid facircle-plus">Agregar</i>
               </button>
               <button
-                onClick={() => excelDownload(Prestamos)}
+                onClick={() => excelDownload(Prestamos, "Prestamos")}
                 className="btn btn-success"
               >
                 Descargar Excel
@@ -309,7 +309,11 @@ const PrestamoComponente = () => {
           </div>
         </div>
       </div>
-      .
+      <a href="/clientes">
+        <button className="btn btn-dark offset-8">
+          <i className="fa-solid facircle-plus">Ir a Clientes</i>
+        </button>
+      </a>
     </div>
   );
 };
