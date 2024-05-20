@@ -36,7 +36,7 @@ const ClienteComponente = () => {
     };
 
     fetchData();
-  }, []);
+  }, [url]);
 
   const Listar = async () => {
     const data = await ApiAriel.Listar(url);
