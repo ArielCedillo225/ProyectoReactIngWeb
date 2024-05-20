@@ -3,7 +3,6 @@ import CustomInput from "./ComponentesMenores/CustomInput";
 import excelDownload from "./Funciones/ExportarExcel";
 import BotonHipervinculo from "./ComponentesMenores/BotonHipervinculo";
 import * as ApiAriel from "./Funciones/ComsumoApi";
-
 import ValidarPrestamo from "./Funciones/ValidarPrestamo";
 import ValidacionDevolucion from "./Funciones/ValidarDevolucion";
 import HeaderTabla from "./ComponentesMenores/HeaderTabla";
