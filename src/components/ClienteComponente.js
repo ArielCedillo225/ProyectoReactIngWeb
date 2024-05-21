@@ -9,6 +9,9 @@ import ValidarCliente from "./Funciones/ValidarCliente";
 import CamposCliente from "./Campos/CamposCliente";
 import HeaderTabla from "./ComponentesMenores/HeaderTabla";
 import Modal from "./ComponentesMenores/Modal";
+import BotonAgregar from "./ComponentesMenores/BotonAgregar";
+import TablaDatos from "./ComponentesMenores/TablaDatos";
+import BotonValidar from "./ComponentesMenores/BotonValidar";
 
 const ClienteComponente = () => {
   const bUrl = "http://localhost:8080/";
@@ -93,66 +96,51 @@ const ClienteComponente = () => {
   return (
     <div className="app">
       <div className="container-fluid">
-        <div className="row mt-3">
-          <div className="col-md-4 offset-md-4">
-            <div className="d-grid mx-auto">
-              <button
-                className="btn btn-dark"
-                data-bs-toggle="modal"
-                data-bs-target="#modal-cliente"
-                onClick={() => aperturaModal()}
-              >
-                <i className="fa-solid facircle-plus">Agregar Cliente</i>
-              </button>
-            </div>
-          </div>
-        </div>
+        <BotonAgregar
+          modalTarget="#modal-cliente"
+          title="Agregar Cliente"
+          onClick={() => aperturaModal()}
+        />
 
-        <div className="row mt-3">
-          <div className="col-12 col-lg-8 offset-1">
-            <div className="table responsive">
-              <table className="table table-bordered">
-                <HeaderTabla data={CamposCliente} />
+        <TablaDatos style="col-6 col-lg-9 offset-0 offset-lg-1">
+          <HeaderTabla data={CamposCliente} />
 
-                <tbody className="table-group-divider">
-                  {Clientes.map((cliente) => (
-                    <tr key={cliente.id}>
-                      <td>{cliente.id}</td>
-                      <td>{cliente.identificacion}</td>
-                      <td>{cliente.tipoIdentificacion}</td>
-                      <td>{cliente.nombrePrincipal}</td>
-                      <td>{cliente.nombreSecundario}</td>
-                      <td>{cliente.apellidoPaterno}</td>
-                      <td>{cliente.apellidoMaterno}</td>
-                      <td>{cliente.direccion}</td>
-                      <td>{cliente.telefono}</td>
-                      <td>{cliente.correo}</td>
-                      <td>{cliente.fechaNacimiento}</td>
-                      <td>{cliente.fechaCreacion}</td>
-                      <td>{cliente.estado}</td>
-                      <td>
-                        {cliente.estado === 2 ? (
-                          <button
-                            className="btn btn-success"
-                            onClick={() => {
-                              activarEstado(cliente.identificacion);
-                            }}
-                          >
-                            <i className="fa-solid fa-check "></i>
-                          </button>
-                        ) : (
-                          <div>
-                            <p>Activo</p>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+          <tbody className="table-group-divider">
+            {Clientes.map((cliente) => (
+              <tr key={cliente.id}>
+                <td>{cliente.id}</td>
+                <td>{cliente.identificacion}</td>
+                <td>{cliente.tipoIdentificacion}</td>
+                <td>{cliente.nombrePrincipal}</td>
+                <td>{cliente.nombreSecundario}</td>
+                <td>{cliente.apellidoPaterno}</td>
+                <td>{cliente.apellidoMaterno}</td>
+                <td>{cliente.direccion}</td>
+                <td>{cliente.telefono}</td>
+                <td>{cliente.correo}</td>
+                <td>{cliente.fechaNacimiento}</td>
+                <td>{cliente.fechaCreacion}</td>
+                <td>{cliente.estado}</td>
+                <td>
+                  {cliente.estado === 2 ? (
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        activarEstado(cliente.identificacion);
+                      }}
+                    >
+                      <i className="fa-solid fa-check "></i>
+                    </button>
+                  ) : (
+                    <div>
+                      <p>Activo</p>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </TablaDatos>
       </div>
 
       {/**Modal */}
@@ -194,12 +182,7 @@ const ClienteComponente = () => {
           onChange={(e) => setFechaNacimiento(e.target.value)}
         />
 
-        <div className="d-grid col-6 mx-auto">
-          <button className="btn btn-success" onClick={() => validarCampos()}>
-            <i className="fa-solid fa-floppy-disck"></i>
-            Guardar
-          </button>
-        </div>
+        <BotonValidar onClick={() => validarCampos()} />
       </Modal>
       <BotonHipervinculo link="/" mensaje="Ir a Prestamos" />
     </div>
